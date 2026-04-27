@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+brewsecure/dist/
+
+# SQLite database
+backend/brewsecure.db
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+.claude/

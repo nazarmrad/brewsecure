@@ -1,6 +1,6 @@
  server {
       listen 80;
-      server_name 172.105.80.174;
+      server_name YOUR_SERVER_IP;
 
       # Serve frontend static files
       root /home/deploy/BrewSecure/brewsecure/dist;

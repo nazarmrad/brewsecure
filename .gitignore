@@ -17,3 +17,4 @@ backend/brewsecure.db
 # Logs
 *.log
 .claude/
+CLAUDE_CONTEXT.md

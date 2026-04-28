@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  baseURL: import.meta.env.VITE_API_URL ?? '/api',
   timeout: 10000,
 })
 
@@ -24,7 +24,7 @@ api.interceptors.response.use(
 )
 
 // Auth endpoints live at /api/login and /api/register (no /v1 prefix)
-const authBase = axios.create({ baseURL: 'http://localhost:3001/api', timeout: 10000 })
+const authBase = axios.create({ baseURL: import.meta.env.VITE_API_URL ?? '/api', timeout: 10000 })
 
 export const productsApi = {
   list: (params) => api.get('/products', { params }),

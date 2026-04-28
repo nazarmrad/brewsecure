@@ -14,39 +14,35 @@ export default function ProductDetail() {
   const navigate = useNavigate()
   const { addToCart } = useCart()
 
-  const [product, setProduct] = useState(location.state?.product ?? null)
+  const [product, setProduct] = useState(null)
   const [allProducts, setAllProducts] = useState([])
-  const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedSize, setSelectedSize] = useState('500g')
   const [qty, setQty] = useState(1)
   const [imgLoaded, setImgLoaded] = useState(false)
   const [addedMain, setAddedMain] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [fetching, setFetching] = useState(!location.state?.product)
+  const [fetching, setFetching] = useState(true)
   const [fetchError, setFetchError] = useState(null)
 
   useEffect(() => {
-    if (!location.state?.product) {
-      setFetching(true)
-      setFetchError(null)
-      productsApi.get(id)
-        .then(({ data }) => setProduct(data))
-        .catch(err => setFetchError(err?.response?.data?.message || err?.message || 'Product not found'))
-        .finally(() => setFetching(false))
-    }
+    setProduct(null)
+    setFetching(true)
+    setFetchError(null)
+    setImgLoaded(false)
+    setSelectedSize('500g')
+    setQty(1)
+    setAddedMain(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    productsApi.get(id)
+      .then(({ data }) => setProduct(data))
+      .catch(err => setFetchError(err?.response?.data?.message || err?.message || 'Product not found'))
+      .finally(() => setFetching(false))
+
     productsApi.list()
       .then(({ data }) => setAllProducts(data.products ?? data))
       .catch(() => {})
   }, [id])
-
-  useEffect(() => {
-    if (product) {
-      setSelectedSize('500g')
-      setQty(1)
-      setImgLoaded(false)
-      setAddedMain(false)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }, [product?.id])
 
   if (fetching) return (
     <div className="pt-32 flex justify-center">

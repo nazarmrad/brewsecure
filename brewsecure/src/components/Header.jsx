@@ -25,7 +25,7 @@ export default function Header({ onLoginOpen }) {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#FAF7F2]/95 backdrop-blur-sm shadow-sm' : 'bg-[#FAF7F2]'}`}>
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <button onClick={() => navigate('/')} className="font-display text-xl font-semibold tracking-tight text-[#1C0F0A] hover:text-[#C4602A] transition-colors">
+        <button onClick={() => navigate('/')} className="font-display text-2xl font-semibold tracking-tight text-[#1C0F0A] hover:text-[#C4602A] transition-colors">
           BrewSecure<span className="text-[#C4602A]">.</span>
         </button>
 

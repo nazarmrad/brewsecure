@@ -28,10 +28,10 @@ export default function HomePage() {
       <section className="hero-grain relative min-h-[85vh] flex items-center overflow-hidden bg-[#2C1810]">
         <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&q=80" alt="Coffee hero" className="absolute inset-0 w-full h-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#2C1810]/20 via-transparent to-[#2C1810]/60" />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-24">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 py-16 sm:py-24">
           <div className="max-w-xl">
             <p className="text-[#D4A574] text-sm font-semibold uppercase tracking-[0.2em] mb-4">Specialty Coffee Roasters</p>
-            <h1 className="font-display text-6xl md:text-7xl font-semibold text-white leading-[1.05] mb-6">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-white leading-[1.05] mb-6">
               Coffee worth<br /><em>waking up for.</em>
             </h1>
             <p className="text-white/70 text-lg leading-relaxed mb-8 font-light">

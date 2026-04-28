@@ -41,7 +41,7 @@ export default function APIExplorer() {
         const path = ep.path.replace(':id', '1').replace(':itemId', '1')
         const token = localStorage.getItem('bs_token')
         const headers = token ? { Authorization: `Bearer ${token}` } : {}
-        const resp = await fetch(`http://localhost:3001${path}`, { headers })
+        const resp = await fetch(path, { headers })
         const ms = Date.now() - t0
         let body
         try { body = await resp.json() } catch { body = await resp.text() }

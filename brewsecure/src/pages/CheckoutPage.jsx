@@ -144,7 +144,7 @@ export default function CheckoutPage() {
           <div className="space-y-3">
             {cart.map((item, idx) => (
               <div key={idx} className="flex gap-3 p-3 bg-white rounded-2xl border border-[#E8DDD5]">
-                <img src={item.product.image} alt={item.product.name} className="w-14 h-14 object-cover rounded-xl flex-shrink-0" />
+                <img src={item.product.imageUrl} alt={item.product.name} className="w-14 h-14 object-cover rounded-xl flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#1C0F0A] truncate">{item.product.name}</p>
                   <p className="text-xs text-[#8B5E3C]">{item.size} · qty {item.qty}</p>

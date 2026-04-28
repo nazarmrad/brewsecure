@@ -97,10 +97,10 @@ export default function ProductDetail() {
         <span className="text-[#1C0F0A] font-medium truncate">{product.name}</span>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           <div className="relative">
-            <div className="aspect-square rounded-3xl overflow-hidden bg-[#F0EAE0] sticky top-24">
+            <div className="aspect-square rounded-3xl overflow-hidden bg-[#F0EAE0] lg:sticky lg:top-24">
               {product.badge && <Badge label={product.badge} />}
               <img src={product.imageUrl} alt={product.name} onLoad={() => setImgLoaded(true)} className={`w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`} />
               {!imgLoaded && (
@@ -116,7 +116,7 @@ export default function ProductDetail() {
               <span className="text-xs font-semibold uppercase tracking-widest text-[#C4602A] bg-[#C4602A]/10 px-3 py-1 rounded-full">{product.category} Roast</span>
               <span className="text-xs text-[#8B5E3C]">{product.process}</span>
             </div>
-            <h1 className="font-display text-4xl md:text-5xl font-semibold text-[#1C0F0A] mb-2 leading-tight">{product.name}</h1>
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-[#1C0F0A] mb-2 leading-tight">{product.name}</h1>
             <p className="text-[#8B5E3C] mb-4">{product.origin} · {product.region} · {product.altitude}</p>
             <div className="flex items-center gap-2 mb-6">
               <Stars rating={product.rating} />

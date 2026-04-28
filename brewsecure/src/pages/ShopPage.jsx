@@ -48,7 +48,7 @@ export default function ShopPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-10 flex gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex gap-8">
         <aside className="hidden lg:block w-52 flex-shrink-0 space-y-8">
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest text-[#8B5E3C] block mb-3">Search</label>

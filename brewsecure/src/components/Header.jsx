@@ -44,14 +44,16 @@ export default function Header({ onLoginOpen }) {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <div className="hidden md:flex items-center gap-3">
-              <span className="text-sm text-[#3D2314]/70 font-medium">
-                {user?.name ?? user?.email ?? 'Account'}
-              </span>
               <button
-                onClick={logout}
-                className="text-sm font-medium text-[#8B5E3C] hover:text-[#C4602A] transition-colors"
+                onClick={() => navigate('/profile')}
+                className="flex items-center gap-2 text-sm font-medium text-[#3D2314]/70 hover:text-[#C4602A] transition-colors"
               >
-                Sign out
+                <div className="w-7 h-7 rounded-full bg-[#C4602A] flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">
+                    {(user?.name ?? user?.email ?? '?')[0].toUpperCase()}
+                  </span>
+                </div>
+                {user?.name ?? user?.email ?? 'Account'}
               </button>
             </div>
           ) : (
@@ -88,7 +90,10 @@ export default function Header({ onLoginOpen }) {
             <button key={l.path} onClick={() => { navigate(l.path); setMobileMenuOpen(false) }} className="text-left text-base font-medium text-[#3D2314]">{l.label}</button>
           ))}
           {isAuthenticated ? (
-            <button onClick={() => { logout(); setMobileMenuOpen(false) }} className="text-left text-base font-medium text-[#C4602A]">Sign out</button>
+            <>
+              <button onClick={() => { navigate('/profile'); setMobileMenuOpen(false) }} className="text-left text-base font-medium text-[#3D2314]">My Profile</button>
+              <button onClick={() => { logout(); setMobileMenuOpen(false) }} className="text-left text-base font-medium text-[#C4602A]">Sign out</button>
+            </>
           ) : (
             <button onClick={() => { onLoginOpen('login'); setMobileMenuOpen(false) }} className="text-left text-base font-medium text-[#C4602A]">Sign in</button>
           )}

@@ -44,7 +44,13 @@ export const cartApi = {
 
 export const ordersApi = {
   create: (data) => api.post('/orders', data),
+  list: () => api.get('/orders'),
   get: (id) => api.get(`/orders/${id}`),
+}
+
+export const usersApi = {
+  me: () => api.get('/users/me'),
+  update: (data) => api.put('/users/me', data),
 }
 
 export default api

@@ -11,6 +11,7 @@ import ShopPage from './pages/ShopPage'
 import ProductDetail from './pages/ProductDetail'
 import CheckoutPage from './pages/CheckoutPage'
 import APIExplorer from './pages/APIExplorer'
+import ProfilePage from './pages/ProfilePage'
 
 function Layout() {
   const location = useLocation()
@@ -60,6 +61,7 @@ function Layout() {
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/shop/:id" element={<ProductDetail />} />
         <Route path="/checkout" element={<RequireAuth><CheckoutPage /></RequireAuth>} />
+        <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
         <Route path="/api" element={<APIExplorer />} />
       </Routes>
 

@@ -4,6 +4,17 @@ const { requireAuth } = require('../middleware/auth')
 
 const router = express.Router()
 
+const WEBHOOK_URL = process.env.ORDER_WEBHOOK_URL
+
+function fireWebhook(payload) {
+  if (!WEBHOOK_URL) return
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  }).catch(() => {})
+}
+
 router.post('/', requireAuth, (req, res) => {
   try {
     const { items, shippingAddress, paymentMethod } = req.body
@@ -28,6 +39,19 @@ router.post('/', requireAuth, (req, res) => {
     }
 
     db.prepare('DELETE FROM cart_items WHERE userId = ?').run(req.user.id)
+
+    fireWebhook({
+      event: 'order.placed',
+      orderId,
+      total,
+      status: 'confirmed',
+      userId: req.user.id,
+      email: req.user.email,
+      items,
+      shippingAddress,
+      paymentMethod,
+      createdAt: new Date().toISOString(),
+    })
 
     res.status(201).json({ orderId, total, status: 'confirmed' })
   } catch (err) {

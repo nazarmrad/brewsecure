@@ -21,6 +21,7 @@ export default function ProductCard({ product }) {
           src={product.imageUrl}
           alt={product.name}
           onLoad={() => setImgLoaded(true)}
+          onError={() => setImgLoaded(true)}
           className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
         {!imgLoaded && (

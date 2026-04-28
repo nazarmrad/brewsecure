@@ -102,7 +102,7 @@ export default function ProductDetail() {
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden bg-[#F0EAE0] lg:sticky lg:top-24">
               {product.badge && <Badge label={product.badge} />}
-              <img src={product.imageUrl} alt={product.name} onLoad={() => setImgLoaded(true)} className={`w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`} />
+              <img src={product.imageUrl} alt={product.name} onLoad={() => setImgLoaded(true)} onError={() => setImgLoaded(true)} className={`w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`} />
               {!imgLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-10 h-10 rounded-full border-2 border-[#C4602A] border-t-transparent animate-spin" />

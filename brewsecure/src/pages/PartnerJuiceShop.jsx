@@ -7,7 +7,7 @@ function ProductCard({ product }) {
   const [imgLoaded, setImgLoaded] = useState(false)
   const imageUrl = product.image?.startsWith('http')
     ? product.image
-    : `${JUICE_SHOP_URL}/${product.image}`
+    : `${JUICE_SHOP_URL}/assets/public/images/products/${product.image}`
 
   return (
     <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col">

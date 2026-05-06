@@ -19,6 +19,7 @@ export default function Header({ onLoginOpen }) {
 
   const navLinks = [
     { label: 'Shop', path: '/shop' },
+    { label: 'Partner Juice Shop', path: '/partner' },
     { label: 'Our Story', path: '/' },
   ]
 

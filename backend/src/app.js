@@ -10,6 +10,7 @@ const cartRoutes    = require('./routes/cart')
 const orderRoutes   = require('./routes/orders')
 const userRoutes    = require('./routes/users')
 const searchRoutes  = require('./routes/search')
+const chatRoutes    = require('./routes/chat')
 
 const app = express()
 
@@ -40,6 +41,7 @@ app.use('/api/cart', cartRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/search', searchRoutes)
+app.use('/api/chat', chatRoutes)
 
 // ── Health ────────────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', app: 'BrewSecure' }))

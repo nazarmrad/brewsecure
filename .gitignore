@@ -20,3 +20,4 @@ backend/brewsecure.db
 CLAUDE_CONTEXT.md
 handoff-ollama.md
 HANDOFF.md
+langfuse-integration.md

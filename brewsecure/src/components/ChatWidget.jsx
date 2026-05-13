@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 
-const SYSTEM_PROMPT = `You are Brew, a friendly and knowledgeable assistant for BrewSecure — a specialty coffee roastery that sources beans directly from farmers around the world. You help customers discover coffees, understand roast profiles and flavor notes, navigate the shop, and answer questions about orders and account. Keep replies concise and warm. If you don't know something specific about BrewSecure's current inventory or a customer's order, suggest they visit the shop or contact support. Never make up prices or product details you are not certain of.`
-
 const INITIAL_MESSAGE = {
   role: 'assistant',
   content: "Hi! I'm Brew, your BrewSecure coffee guide. Ask me anything — roast profiles, brewing tips, or help finding your next favorite bag. ☕",
@@ -35,23 +33,16 @@ export default function ChatWidget() {
     setError(null)
 
     try {
-      const res = await fetch('/ollama/api/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'qwen2.5:7b',
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            ...nextMessages,
-          ],
-          stream: false,
-        }),
+        body: JSON.stringify({ messages: nextMessages }),
       })
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
       const data = await res.json()
-      const reply = data.message?.content ?? 'Sorry, I did not get a response.'
+      const reply = data.reply ?? 'Sorry, I did not get a response.'
       setMessages(prev => [...prev, { role: 'assistant', content: reply }])
     } catch {
       setError('Something went wrong. The AI may be warming up — please try again in a moment.')

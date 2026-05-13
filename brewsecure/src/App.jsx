@@ -13,6 +13,7 @@ import CheckoutPage from './pages/CheckoutPage'
 import APIExplorer from './pages/APIExplorer'
 import ProfilePage from './pages/ProfilePage'
 import PartnerJuiceShop from './pages/PartnerJuiceShop'
+import ChatWidget from './components/ChatWidget'
 
 function Layout() {
   const location = useLocation()
@@ -66,6 +67,8 @@ function Layout() {
         <Route path="/partner" element={<PartnerJuiceShop />} />
         <Route path="/api" element={<APIExplorer />} />
       </Routes>
+
+      {!isApiPage && <ChatWidget />}
 
       {!isApiPage && (
         <footer className="bg-[#1C0F0A] text-white/60 py-14 px-6">

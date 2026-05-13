@@ -18,3 +18,5 @@ backend/brewsecure.db
 *.log
 .claude/
 CLAUDE_CONTEXT.md
+handoff-ollama.md
+HANDOFF.md

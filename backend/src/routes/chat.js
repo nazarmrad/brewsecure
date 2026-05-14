@@ -17,13 +17,11 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'messages array required' })
   }
 
-  const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')?.content ?? ''
-
   const trace = langfuse.trace({ name: 'chat-widget' })
   const generation = trace.generation({
     name: 'ollama-response',
     model: 'qwen2.5:7b',
-    input: lastUserMessage,
+    input: messages,
   })
 
   try {
@@ -33,23 +31,47 @@ router.post('/', async (req, res) => {
       body: JSON.stringify({
         model: 'qwen2.5:7b',
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
-        stream: false,
+        stream: true,
       }),
     })
 
     if (!response.ok) throw new Error(`Ollama HTTP ${response.status}`)
 
-    const data = await response.json()
-    const reply = data.message?.content ?? ''
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
 
-    generation.end({ output: reply })
+    let fullResponse = ''
+
+    for await (const chunk of response.body) {
+      const text = new TextDecoder().decode(chunk)
+      const lines = text.split('\n').filter(l => l.trim())
+
+      for (const line of lines) {
+        try {
+          const json = JSON.parse(line)
+          if (json.message?.content) {
+            fullResponse += json.message.content
+            res.write(`data: ${JSON.stringify({ token: json.message.content })}\n\n`)
+          }
+          if (json.done) {
+            res.write('data: [DONE]\n\n')
+            res.end()
+          }
+        } catch (e) {
+          // incomplete chunk, skip
+        }
+      }
+    }
+
+    generation.end({ output: fullResponse })
     await langfuse.flushAsync()
-
-    res.json({ reply })
   } catch (err) {
     generation.end({ output: err.message, level: 'ERROR' })
     await langfuse.flushAsync()
-    res.status(500).json({ error: 'AI service unavailable' })
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'AI service unavailable' })
+    }
   }
 })
 

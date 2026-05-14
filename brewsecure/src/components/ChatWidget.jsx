@@ -41,9 +41,42 @@ export default function ChatWidget() {
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
-      const data = await res.json()
-      const reply = data.reply ?? 'Sorry, I did not get a response.'
-      setMessages(prev => [...prev, { role: 'assistant', content: reply }])
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let assistantMessage = ''
+      let firstToken = true
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value)
+        const lines = chunk.split('\n').filter(l => l.startsWith('data: '))
+
+        for (const line of lines) {
+          const data = line.slice('data: '.length).trim()
+          if (data === '[DONE]') break
+
+          try {
+            const json = JSON.parse(data)
+            if (json.token) {
+              assistantMessage += json.token
+              if (firstToken) {
+                firstToken = false
+                setLoading(false)
+                setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }])
+              } else {
+                setMessages(prev => [
+                  ...prev.slice(0, -1),
+                  { role: 'assistant', content: assistantMessage },
+                ])
+              }
+            }
+          } catch (e) {
+            // skip malformed chunk
+          }
+        }
+      }
     } catch {
       setError('Something went wrong. The AI may be warming up — please try again in a moment.')
     } finally {

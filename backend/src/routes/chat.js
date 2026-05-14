@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
   const trace = langfuse.trace({ name: 'chat-widget' })
   const generation = trace.generation({
     name: 'ollama-response',
-    model: 'qwen2.5:7b',
+    model: 'qwen2.5:3b',
     input: messages,
   })
 
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'qwen2.5:7b',
+        model: 'qwen2.5:3b',
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
         stream: true,
       }),

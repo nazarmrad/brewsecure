@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { flushSync } from 'react-dom'
 
 const INITIAL_MESSAGE = {
   role: 'assistant',
@@ -61,16 +62,18 @@ export default function ChatWidget() {
             const json = JSON.parse(data)
             if (json.token) {
               assistantMessage += json.token
-              if (firstToken) {
-                firstToken = false
-                setLoading(false)
-                setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }])
-              } else {
-                setMessages(prev => [
-                  ...prev.slice(0, -1),
-                  { role: 'assistant', content: assistantMessage },
-                ])
-              }
+              flushSync(() => {
+                if (firstToken) {
+                  firstToken = false
+                  setLoading(false)
+                  setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }])
+                } else {
+                  setMessages(prev => [
+                    ...prev.slice(0, -1),
+                    { role: 'assistant', content: assistantMessage },
+                  ])
+                }
+              })
             }
           } catch (e) {
             // skip malformed chunk

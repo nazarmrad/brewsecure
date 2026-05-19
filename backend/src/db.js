@@ -66,6 +66,16 @@ db.exec(`
     size      TEXT,
     FOREIGN KEY (orderId) REFERENCES orders(id)
   );
+
+  CREATE TABLE IF NOT EXISTS conversations (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id  TEXT NOT NULL,
+    role        TEXT NOT NULL CHECK(role IN ('user', 'assistant', 'system')),
+    content     TEXT NOT NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+  CREATE INDEX IF NOT EXISTS idx_conversations_session
+    ON conversations(session_id, created_at);
 `)
 
 module.exports = db

@@ -1,5 +1,7 @@
 const express = require('express')
+const crypto = require('crypto')
 const { Langfuse } = require('langfuse')
+const db = require('../db')
 
 const router = express.Router()
 
@@ -17,11 +19,37 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'messages array required' })
   }
 
+  // Get or create session ID via cookie
+  let sessionId = req.cookies.session_id
+  if (!sessionId) {
+    sessionId = crypto.randomUUID()
+    res.cookie('session_id', sessionId, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    })
+  }
+
+  const userMessage = messages[messages.length - 1].content
+
+  // Load last 20 messages (10 exchanges) for this session — sliding window
+  const history = db.prepare(`
+    SELECT role, content FROM conversations
+    WHERE session_id = ?
+    ORDER BY created_at DESC
+    LIMIT 20
+  `).all(sessionId).reverse()
+
+  const fullMessages = [
+    { role: 'system', content: SYSTEM_PROMPT },
+    ...history,
+    { role: 'user', content: userMessage },
+  ]
+
   const trace = langfuse.trace({ name: 'chat-widget' })
   const generation = trace.generation({
     name: 'ollama-response',
     model: 'qwen2.5:3b',
-    input: messages,
+    input: fullMessages,
   })
 
   try {
@@ -30,7 +58,7 @@ router.post('/', async (req, res) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'qwen2.5:3b',
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+        messages: fullMessages,
         stream: true,
       }),
     })
@@ -64,6 +92,13 @@ router.post('/', async (req, res) => {
         }
       }
     }
+
+    // Save exchange after streaming completes
+    const saveMsg = db.prepare(
+      'INSERT INTO conversations (session_id, role, content) VALUES (?, ?, ?)'
+    )
+    saveMsg.run(sessionId, 'user', userMessage)
+    saveMsg.run(sessionId, 'assistant', fullResponse)
 
     generation.end({ output: fullResponse })
     await langfuse.flushAsync()

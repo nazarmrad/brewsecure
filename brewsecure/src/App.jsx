@@ -69,6 +69,9 @@ function Layout() {
       </Routes>
 
       {!isApiPage && <ChatWidget />}
+      {!isApiPage && (
+        <elevenlabs-convai agent-id="agent_5501ks0p98cxex3a60tkfw4ahh8d" />
+      )}
 
       {!isApiPage && (
         <footer className="bg-[#1C0F0A] text-white/60 py-14 px-6">

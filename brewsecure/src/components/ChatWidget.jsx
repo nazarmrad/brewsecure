@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { flushSync } from 'react-dom'
-import { useConversation } from '@elevenlabs/react'
+import { ConversationProvider, useConversation } from '@elevenlabs/react'
 
 const AGENT_ID = 'agent_5501ks0p98cxex3a60tkfw4ahh8d'
 
@@ -9,7 +9,7 @@ const INITIAL_MESSAGE = {
   content: "Hi! I'm Brew, your BrewSecure coffee guide. Ask me anything — roast profiles, brewing tips, or help finding your next favorite bag. ☕",
 }
 
-export default function ChatWidget() {
+function ChatWidgetInner() {
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState('text') // 'text' | 'voice'
   const [messages, setMessages] = useState([INITIAL_MESSAGE])
@@ -22,8 +22,7 @@ export default function ChatWidget() {
 
   const conversation = useConversation({
     onConnect: () => setVoiceError(null),
-    onDisconnect: () => {},
-    onError: (err) => setVoiceError('Voice connection failed. Please try again.'),
+    onError: () => setVoiceError('Voice connection failed. Please try again.'),
   })
 
   useEffect(() => {
@@ -144,9 +143,10 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {open && (
-        <div className="w-[360px] flex flex-col rounded-2xl shadow-2xl border border-[#E8DDD5] bg-[#FAF7F2] overflow-hidden"
-          style={{ maxHeight: mode === 'voice' ? '420px' : '520px' }}>
-
+        <div
+          className="w-[360px] flex flex-col rounded-2xl shadow-2xl border border-[#E8DDD5] bg-[#FAF7F2] overflow-hidden"
+          style={{ maxHeight: mode === 'voice' ? '420px' : '520px' }}
+        >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 bg-[#1C0F0A]">
             <div className="flex items-center gap-2.5">
@@ -338,5 +338,13 @@ export default function ChatWidget() {
         )}
       </button>
     </div>
+  )
+}
+
+export default function ChatWidget() {
+  return (
+    <ConversationProvider agentId={AGENT_ID}>
+      <ChatWidgetInner />
+    </ConversationProvider>
   )
 }

@@ -53,9 +53,12 @@ router.post('/', async (req, res) => {
   })
 
   try {
-    const response = await fetch('http://10.0.0.2:11434/api/chat', {
+    const response = await fetch('https://brewsecure-ai-gateway-b1ebc8e.zuplo.app/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.ZUPLO_API_KEY}`,
+      },
       body: JSON.stringify({
         model: 'qwen2.5:3b',
         messages: fullMessages,
@@ -63,7 +66,7 @@ router.post('/', async (req, res) => {
       }),
     })
 
-    if (!response.ok) throw new Error(`Ollama HTTP ${response.status}`)
+    if (!response.ok) throw new Error(`Zuplo HTTP ${response.status}`)
 
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
@@ -77,15 +80,19 @@ router.post('/', async (req, res) => {
       const lines = text.split('\n').filter(l => l.trim())
 
       for (const line of lines) {
+        if (!line.startsWith('data: ')) continue
+        const data = line.slice(6)
+        if (data === '[DONE]') {
+          res.write('data: [DONE]\n\n')
+          res.end()
+          break
+        }
         try {
-          const json = JSON.parse(line)
-          if (json.message?.content) {
-            fullResponse += json.message.content
-            res.write(`data: ${JSON.stringify({ token: json.message.content })}\n\n`)
-          }
-          if (json.done) {
-            res.write('data: [DONE]\n\n')
-            res.end()
+          const json = JSON.parse(data)
+          const token = json.choices?.[0]?.delta?.content
+          if (token) {
+            fullResponse += token
+            res.write(`data: ${JSON.stringify({ token })}\n\n`)
           }
         } catch (e) {
           // incomplete chunk, skip

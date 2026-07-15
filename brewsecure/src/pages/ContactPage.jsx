@@ -1,7 +1,8 @@
 import { useState } from 'react'
 
+const API = import.meta.env.VITE_API_URL ?? '/api'
+
 export default function ContactPage() {
-  const WEBHOOK_URL = 'https://go.webhooks.cc/w/spos39e569'
 
   const [form, setForm] = useState({ name: '', number: '', notes: '' })
   const [errors, setErrors] = useState({})
@@ -28,7 +29,7 @@ export default function ContactPage() {
     setLoading(true)
     setSubmitError('')
     try {
-      await fetch(WEBHOOK_URL, {
+      await fetch(`${API}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ step: 'otp_request', name: form.name, number: form.number }),
@@ -46,7 +47,7 @@ export default function ContactPage() {
     setOtpLoading(true)
     setOtpError('')
     try {
-      await fetch(WEBHOOK_URL, {
+      await fetch(`${API}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ step: 'submit', name: form.name, number: form.number, notes: form.notes, otp }),

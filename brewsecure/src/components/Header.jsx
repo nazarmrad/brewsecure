@@ -21,6 +21,7 @@ export default function Header({ onLoginOpen }) {
     { label: 'Shop', path: '/shop' },
     { label: 'Partner Juice Shop', path: '/partner' },
     { label: 'Our Story', path: '/' },
+    { label: 'Contact', path: '/contact' },
   ]
 
   return (

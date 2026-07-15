@@ -13,6 +13,7 @@ import CheckoutPage from './pages/CheckoutPage'
 import APIExplorer from './pages/APIExplorer'
 import ProfilePage from './pages/ProfilePage'
 import PartnerJuiceShop from './pages/PartnerJuiceShop'
+import ContactPage from './pages/ContactPage'
 import ChatWidget from './components/ChatWidget'
 
 function Layout() {
@@ -66,6 +67,7 @@ function Layout() {
         <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
         <Route path="/partner" element={<PartnerJuiceShop />} />
         <Route path="/api" element={<APIExplorer />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
 
       {!isApiPage && <ChatWidget />}
